@@ -33,7 +33,7 @@ for rar in rarlist:
                     print '重复文件自动替换-o选项无效'
                     child.sendline('yes')
                 if index ==2:
-                    print '密码正确，并解压'
+                    print '密码正确，并解压'+pw
                     os.remove(rarname)
                     break
         except Exception as e:
@@ -45,23 +45,17 @@ for rar in rarlist:
         print '使用.7z解压'
         try:
             for pw in pwl:
-                with open(rarname, 'rb') as f:
-                    try:
-                        f7z = py7zlib.Archive7z(f,password=pw)
-                        if len(f7z.getnames()):
-                            for name in f7z.getnames():
-                                of = os.path.join(root,name)
-                                od = os.path.dirname(of)
-                                if not os.path.exists(od):
-                                    os.makedirs(od)
-                                with open(of,'wb') as o:
-                                    o.write(f7z.getmember(name).read())
-                            os.remove(rarname)
-                            print '7z密码正确'
-                            break
-                    except py7zlib.WrongPasswordError as er:
-                        print '7z密码错误，换一个'
-                        continue
+                # 7z库也是超慢，模仿unzip使用
+                command = ['7za', 'x', rarname, '-o' + root, '-r', '-aoa', '-p' + pw]
+                child = pexpect.spawn(' '.join(command))
+                index = child.expect(['Wrong password', pexpect.EOF], timeout=None)
+                if index == 0:
+                    print '密码错误'
+                    continue
+                if index == 1:
+                    print '密码正确，并解压' + pw
+                    os.remove(rarname)
+                    break
         except Exception as e:
             print e
             print '7z解压失败'
@@ -74,7 +68,7 @@ for rar in rarlist:
                 try:
                     rarfile.RarFile(rarname).extractall(path=root,pwd=pw)
                     os.remove(rarname)
-                    print 'rar密码正确'
+                    print 'rar密码正确'+pw
                     break
                 except rarfile.RarWrongPassword as er:
                     print 'rar 密码错误'
