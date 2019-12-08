@@ -29,7 +29,7 @@ with open('mdata.txt') as f:
 
 for url in urls:
     # 输出时候给每一个项编一个号。
-    print urls.index(url),' ',url,' ',urlpass[url]
+    print(urls.index(url),' ',url,' ',urlpass[url])
 
 # 这个是操作的主体，网络驱动器对象，承载所有操作。
 driver = webdriver.Chrome()
