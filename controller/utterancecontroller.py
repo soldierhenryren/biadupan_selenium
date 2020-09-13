@@ -10,7 +10,7 @@ class UtteranceController:
         self.dest_directory = Path('/root/baidupan_selenium/uterance/')
         # Instantiates a client
         self.client = texttospeech.TextToSpeechClient()
-        self.auth = oss2.Auth('LTAI4FcjbgijZZqQbrug1xPZ', 'Yu82TyUl9zOBpgmrFlQVSOjG8l9h4t')
+        self.auth = oss2.Auth('XXXXXXXX', 'XXXXXXXX')
         self.endpoint = 'oss-cn-shanghai.aliyuncs.com'
         # 设置连接超时时间为30秒。
         self.bucket = oss2.Bucket(self.auth, self.endpoint, 'voice-cbtai-com', connect_timeout=30)
